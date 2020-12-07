@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Data on Lightning Rod - Tales of Bugs and Errors</title>
+    <link>https://benchonaut.gitlab.io/lightning-rod/data/</link>
+    <description>Recent content in Data on Lightning Rod - Tales of Bugs and Errors</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>©0π łeft ...</copyright><atom:link href="https://benchonaut.gitlab.io/lightning-rod/data/index.xml" rel="self" type="application/rss+xml" />
+  </channel>
+</rss>

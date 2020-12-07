@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Lightning Rod - Tales of Bugs and Errors</title>
+    <link>https://benchonaut.gitlab.io/lightning-rod/tags/</link>
+    <description>Recent content in Tags on Lightning Rod - Tales of Bugs and Errors</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>©0π łeft ...</copyright>
+    <lastBuildDate>Sat, 24 Oct 2020 15:19:10 +0000</lastBuildDate><atom:link href="https://benchonaut.gitlab.io/lightning-rod/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>cms</title>
+      <link>https://benchonaut.gitlab.io/lightning-rod/tags/cms/</link>
+      <pubDate>Sat, 24 Oct 2020 15:19:10 +0000</pubDate>
+      
+      <guid>https://benchonaut.gitlab.io/lightning-rod/tags/cms/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hokus</title>
+      <link>https://benchonaut.gitlab.io/lightning-rod/tags/hokus/</link>
+      <pubDate>Sat, 24 Oct 2020 15:19:10 +0000</pubDate>
+      
+      <guid>https://benchonaut.gitlab.io/lightning-rod/tags/hokus/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hugo</title>
+      <link>https://benchonaut.gitlab.io/lightning-rod/tags/hugo/</link>
+      <pubDate>Sat, 24 Oct 2020 15:19:10 +0000</pubDate>
+      
+      <guid>https://benchonaut.gitlab.io/lightning-rod/tags/hugo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>setup</title>
+      <link>https://benchonaut.gitlab.io/lightning-rod/tags/setup/</link>
+      <pubDate>Sat, 24 Oct 2020 15:19:10 +0000</pubDate>
+      
+      <guid>https://benchonaut.gitlab.io/lightning-rod/tags/setup/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ssg</title>
+      <link>https://benchonaut.gitlab.io/lightning-rod/tags/ssg/</link>
+      <pubDate>Sat, 24 Oct 2020 15:19:10 +0000</pubDate>
+      
+      <guid>https://benchonaut.gitlab.io/lightning-rod/tags/ssg/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>timeline</title>
+      <link>https://benchonaut.gitlab.io/lightning-rod/tags/timeline/</link>
+      <pubDate>Sat, 24 Oct 2020 15:19:10 +0000</pubDate>
+      
+      <guid>https://benchonaut.gitlab.io/lightning-rod/tags/timeline/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>toml</title>
+      <link>https://benchonaut.gitlab.io/lightning-rod/tags/toml/</link>
+      <pubDate>Sat, 24 Oct 2020 15:19:10 +0000</pubDate>
+      
+      <guid>https://benchonaut.gitlab.io/lightning-rod/tags/toml/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

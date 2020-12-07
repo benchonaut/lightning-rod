@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Lightning Rod - Tales of Bugs and Errors</title>
+    <link>https://benchonaut.gitlab.io/lightning-rod/</link>
+    <description>Recent content on Lightning Rod - Tales of Bugs and Errors</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>©0π łeft ...</copyright>
+    <lastBuildDate>Mon, 07 Dec 2020 01:13:08 +0000</lastBuildDate><atom:link href="https://benchonaut.gitlab.io/lightning-rod/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Migrating and clean up incredible slow wordpress instances with a database messed by misuse and abuse of gravityforms and advanced custom fields</title>
+      <link>https://benchonaut.gitlab.io/lightning-rod/posts/2020/12/migrating-and-clean-up-incredible-slow-wordpress-instances-with-a-database-messed-by-misuse-and-abuse-of-gravityforms-and-advanced-custom-fields/</link>
+      <pubDate>Mon, 07 Dec 2020 01:13:08 +0000</pubDate>
+      
+      <guid>https://benchonaut.gitlab.io/lightning-rod/posts/2020/12/migrating-and-clean-up-incredible-slow-wordpress-instances-with-a-database-messed-by-misuse-and-abuse-of-gravityforms-and-advanced-custom-fields/</guid>
+      <description>before operation transfer your database:   Example: transfer a single database like this:  docker exec myrealproject.lan_database /bin/sh -c &amp;#39;mysqldump -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE &amp;#39; |docker exec -i mytestproject.lan_database /bin/sh -c &amp;#39;mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE &amp;#39; &amp;amp;  Example: transfer 2 single tables in background ( use wait before next step) like this ( here we transfer wp_post[s|postmeta] ) :  docker exec myrealroject.lan_database /bin/sh -c &amp;#39;mysqldump -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE wp_postmeta&amp;#39; |docker exec -i mytestproject.</description>
+    </item>
+    
+    <item>
+      <title>migrating and bypassing auth  on cakePHP1.3 aka create admin user and password reset</title>
+      <link>https://benchonaut.gitlab.io/lightning-rod/posts/2020/10/migrating-and-bypassing-auth-on-cakephp1.3-aka-create-admin-user-and-password-reset/</link>
+      <pubDate>Wed, 28 Oct 2020 05:47:54 +0000</pubDate>
+      
+      <guid>https://benchonaut.gitlab.io/lightning-rod/posts/2020/10/migrating-and-bypassing-auth-on-cakephp1.3-aka-create-admin-user-and-password-reset/</guid>
+      <description>a Paingaining CakePHP 1.3 migration: some strange people refuse to upgrade their stuff to at least acceptable compatibility levels... ...one day their hoster displays &amp;quot;we will turn off version X.Y next month&amp;quot; in his backend do not answer the phone , you will see where this ends up :  firstly pulling some php5.6 environment out of the grave a quick review of the normally unused top root /index.php revealed a nicely hacked page with a 3 line snippet i securing everything with .</description>
+    </item>
+    
+    <item>
+      <title>Hugo SSG/CMS and the initial static hussle</title>
+      <link>https://benchonaut.gitlab.io/lightning-rod/posts/2020/10/hugo-ssg/cms-and-the-initial-static-hussle/</link>
+      <pubDate>Sat, 24 Oct 2020 15:19:10 +0000</pubDate>
+      
+      <guid>https://benchonaut.gitlab.io/lightning-rod/posts/2020/10/hugo-ssg/cms-and-the-initial-static-hussle/</guid>
+      <description>OkayOkay , so bootstrapping this whole thingy was definitely something for the lightning rod ,
+d*mn , i created a hugo page already , but this time the level leveled up somehow.
+ Timeline Theme woes Firstly the timeline theme was really picky, since it needed the respective entries in a folder called timeline , but hokus also wants a subfolder , so all posts are created in content/timeline under a subfolder for each post.</description>
+    </item>
+    
+    <item>
+      <title>Hello and Welcome</title>
+      <link>https://benchonaut.gitlab.io/lightning-rod/posts/2020/10/hello-and-welcome/</link>
+      <pubDate>Fri, 23 Oct 2020 05:17:03 +0000</pubDate>
+      
+      <guid>https://benchonaut.gitlab.io/lightning-rod/posts/2020/10/hello-and-welcome/</guid>
+      <description>This is just a placeholder post , so the timeline items fon&amp;rsquo;t feel alone.</description>
+    </item>
+    
+  </channel>
+</rss>

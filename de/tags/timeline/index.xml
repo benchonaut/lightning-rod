@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>timeline on Lightning Rod - Tales of Bugs and Errors</title>
+    <link>https://benchonaut.gitlab.io/lightning-rod/de/tags/timeline/</link>
+    <description>Recent content in timeline on Lightning Rod - Tales of Bugs and Errors</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>©0π łeft ...</copyright>
+    <lastBuildDate>Fri, 23 Oct 2020 05:59:02 +0000</lastBuildDate><atom:link href="https://benchonaut.gitlab.io/lightning-rod/de/tags/timeline/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hugo SSG/CMS und der anfängliche statische Ärger</title>
+      <link>https://benchonaut.gitlab.io/lightning-rod/de/posts/2020/10/hugo-ssg/cms-und-der-anf%C3%A4ngliche-statische-%C3%A4rger/</link>
+      <pubDate>Fri, 23 Oct 2020 05:59:02 +0000</pubDate>
+      
+      <guid>https://benchonaut.gitlab.io/lightning-rod/de/posts/2020/10/hugo-ssg/cms-und-der-anf%C3%A4ngliche-statische-%C3%A4rger/</guid>
+      <description>OkayOkay , also das Bootstrapping dieses ganzen Dings definitiv war etwas für den Blitzableiter.
+Verdammt , ich habe schon Hugo Seiten zusammengefriemelt , aber diesmal erhöhte sich der Schwierigkeitsgrad immens.
+ Timeline Theme Eigenheiten Erstmal war das timeline Theme wirkich zickig, da es die entstrpechenden Einträge in einem Ordner namens timeline erwartet, aber hokus möchte einen Unterordner , also liegen die Beiträge dann unter content/timeline mit einem Unterordner für jeden Post.</description>
+    </item>
+    
+  </channel>
+</rss>

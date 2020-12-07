@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>setup on Lightning Rod - Tales of Bugs and Errors</title>
+    <link>https://benchonaut.gitlab.io/lightning-rod/tags/setup/</link>
+    <description>Recent content in setup on Lightning Rod - Tales of Bugs and Errors</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>©0π łeft ...</copyright>
+    <lastBuildDate>Sat, 24 Oct 2020 15:19:10 +0000</lastBuildDate><atom:link href="https://benchonaut.gitlab.io/lightning-rod/tags/setup/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hugo SSG/CMS and the initial static hussle</title>
+      <link>https://benchonaut.gitlab.io/lightning-rod/posts/2020/10/hugo-ssg/cms-and-the-initial-static-hussle/</link>
+      <pubDate>Sat, 24 Oct 2020 15:19:10 +0000</pubDate>
+      
+      <guid>https://benchonaut.gitlab.io/lightning-rod/posts/2020/10/hugo-ssg/cms-and-the-initial-static-hussle/</guid>
+      <description>OkayOkay , so bootstrapping this whole thingy was definitely something for the lightning rod ,
+d*mn , i created a hugo page already , but this time the level leveled up somehow.
+ Timeline Theme woes Firstly the timeline theme was really picky, since it needed the respective entries in a folder called timeline , but hokus also wants a subfolder , so all posts are created in content/timeline under a subfolder for each post.</description>
+    </item>
+    
+  </channel>
+</rss>

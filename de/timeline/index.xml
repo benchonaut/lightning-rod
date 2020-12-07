@@ -1,0 +1,72 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Timeline on Lightning Rod - Tales of Bugs and Errors</title>
+        <link>https://benchonaut.gitlab.io/lightning-rod/de/timeline/</link>
+        <description>Recent content in Timeline on Lightning Rod - Tales of Bugs and Errors</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <copyright>©0π łeft ...</copyright>
+        <lastBuildDate>Fri, 23 Oct 2020 05:59:02 +0000</lastBuildDate>
+        <atom:link href="https://benchonaut.gitlab.io/lightning-rod/de/timeline/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>Hugo SSG/CMS und der anfängliche statische Ärger</title>
+            <link>https://benchonaut.gitlab.io/lightning-rod/de/posts/2020/10/hugo-ssg/cms-und-der-anf%C3%A4ngliche-statische-%C3%A4rger/</link>
+            <pubDate>Fri, 23 Oct 2020 05:59:02 +0000</pubDate>
+            
+            <guid>https://benchonaut.gitlab.io/lightning-rod/de/posts/2020/10/hugo-ssg/cms-und-der-anf%C3%A4ngliche-statische-%C3%A4rger/</guid>
+            <description>OkayOkay , also das Bootstrapping dieses ganzen Dings definitiv war etwas für den Blitzableiter.
+Verdammt , ich habe schon Hugo Seiten zusammengefriemelt , aber diesmal erhöhte sich der Schwierigkeitsgrad immens.
+ Timeline Theme Eigenheiten Erstmal war das timeline Theme wirkich zickig, da es die entstrpechenden Einträge in einem Ordner namens timeline erwartet, aber hokus möchte einen Unterordner , also liegen die Beiträge dann unter content/timeline mit einem Unterordner für jeden Post.</description>
+            <content type="html"><![CDATA[<p>OkayOkay , also das Bootstrapping dieses ganzen Dings definitiv war etwas für den Blitzableiter.</p>
+<p>Verdammt , ich habe schon Hugo Seiten zusammengefriemelt , aber diesmal erhöhte sich der Schwierigkeitsgrad immens.</p>
+<hr>
+<h2 id="timeline-theme-eigenheiten">Timeline Theme Eigenheiten</h2>
+<p>Erstmal war das <strong>timeline</strong> Theme wirkich zickig, da es die entstrpechenden Einträge in einem Ordner namens <code>timeline</code> erwartet, aber hokus möchte einen Unterordner , also liegen die Beiträge dann unter <code>content/timeline</code> mit einem Unterordner für jeden Post.</p>
+<p>Ausserdem BRAUCHT das Theme <code>hugo-extended</code>.</p>
+<hr>
+<p>Sobald ich merkte, dass das Thema auch eine Beitragsliste unter <code>posts</code>ertellt , wenn ein <code>content/posts/</code> Ordner existiert ,
+musste eben ein  <strong>soft-link</strong> von <code>content/timeline</code> nach  <code>content/posts</code> erstellt werden.</p>
+<p>Da index.md in Layouts immer noch nicht wirklich geparsed wird und Shortcodes in HTML funktionieren, ** ABER NICHT in <code>index.html</code> ** , wurden zwei Dateien  (<code>index.html</code> und <code>index.de.html</code> ) in den  <code>layouts</code>-Ordner gelegt</p>
+<hr>
+<p>Um das theme zu versüssen wurden</p>
+<pre><code>layouts/partials/footer.html
+layouts/partials/logo.html
+</code></pre><p>honzugefügt, um ein Logo neben der Überschrift im Menü und einen Besucherzähler in der Fußzeile zu haben.</p>
+<h2 id="generelle-änderungen">Generelle Änderungen</h2>
+<p>Um Rohformat-HTML zu unterstützen musste eine Datei <code>layouts/shortcodes/rawhtml.html</code> mit folgendem Inhalt:</p>
+<pre><code>&lt;!-- raw html --&gt;
+{{.Inner}}
+</code></pre><p>erstellt werden.</p>
+<hr>
+<p>Da das Hosting in einem Unterordner stattfindet , musste</p>
+<pre><code>canonifyurls = true
+relativeURLs = true
+</code></pre><p>in der Config gesetzt werden.</p>
+<p>Hugo hatte auch keine Lust die Menüeinträge richtig zu setzen wenn sie simple strings waren , ein punkt vor dem Link half:</p>
+<pre><code>[[menu.main]]
+  identifier = &quot;posts&quot;
+  name       = &quot;Posts&quot;
+  url        = &quot;./posts&quot;
+  weight     = 1
+
+</code></pre><hr>
+<h2 id="awesomeness--auto-preview-without-hugo-serve">Awesomeness ( auto preview without <code>hugo serve</code>)</h2>
+<p>da das Ziel ein Unterordner ist und die Dinge mit &ldquo;hugo serve&rdquo; hässlich werden können ,bot das  <code>inotify-tools</code>-Paket (Debian) nach einigem Basteln die Möglichkeit einer automatisch generierende Schleife:</p>
+<pre><code> while (true);do inotifywait -e modify,create,delete,move -r $(pwd) &amp;&amp; /tmp/hugo ; sleep 1 ;done &amp;
+</code></pre>]]></content>
+        </item>
+        
+        <item>
+            <title>Hallo und willkommen</title>
+            <link>https://benchonaut.gitlab.io/lightning-rod/de/posts/2020/10/hallo-und-willkommen/</link>
+            <pubDate>Fri, 23 Oct 2020 05:17:03 +0000</pubDate>
+            
+            <guid>https://benchonaut.gitlab.io/lightning-rod/de/posts/2020/10/hallo-und-willkommen/</guid>
+            <description>Dieser Post ist ein Platzhalter damit die Timeline Inhalte sich nicht so aleine fühlen.</description>
+            <content type="html"><![CDATA[<p>Dieser Post ist ein Platzhalter damit die Timeline Inhalte sich nicht so  aleine fühlen.</p>
+]]></content>
+        </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,303 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Timeline on Lightning Rod - Tales of Bugs and Errors</title>
+        <link>https://benchonaut.gitlab.io/lightning-rod/timeline/</link>
+        <description>Recent content in Timeline on Lightning Rod - Tales of Bugs and Errors</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <copyright>©0π łeft ...</copyright>
+        <lastBuildDate>Mon, 07 Dec 2020 01:13:08 +0000</lastBuildDate>
+        <atom:link href="https://benchonaut.gitlab.io/lightning-rod/timeline/index.xml" rel="self" type="application/rss+xml" />
+        
+        <item>
+            <title>Migrating and clean up incredible slow wordpress instances with a database messed by misuse and abuse of gravityforms and advanced custom fields</title>
+            <link>https://benchonaut.gitlab.io/lightning-rod/posts/2020/12/migrating-and-clean-up-incredible-slow-wordpress-instances-with-a-database-messed-by-misuse-and-abuse-of-gravityforms-and-advanced-custom-fields/</link>
+            <pubDate>Mon, 07 Dec 2020 01:13:08 +0000</pubDate>
+            
+            <guid>https://benchonaut.gitlab.io/lightning-rod/posts/2020/12/migrating-and-clean-up-incredible-slow-wordpress-instances-with-a-database-messed-by-misuse-and-abuse-of-gravityforms-and-advanced-custom-fields/</guid>
+            <description>before operation transfer your database:   Example: transfer a single database like this:  docker exec myrealproject.lan_database /bin/sh -c &amp;#39;mysqldump -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE &amp;#39; |docker exec -i mytestproject.lan_database /bin/sh -c &amp;#39;mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE &amp;#39; &amp;amp;  Example: transfer 2 single tables in background ( use wait before next step) like this ( here we transfer wp_post[s|postmeta] ) :  docker exec myrealroject.lan_database /bin/sh -c &amp;#39;mysqldump -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE wp_postmeta&amp;#39; |docker exec -i mytestproject.</description>
+            <content type="html"><![CDATA[<hr>
+<h2 id="before-operation">before operation</h2>
+<h3 id="transfer-your-database">transfer your database:</h3>
+<hr>
+<ul>
+<li>Example: transfer a single  database like this:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker exec   myrealproject.lan_database  /bin/sh -c <span style="color:#e6db74">&#39;mysqldump -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE &#39;</span> |docker exec -i mytestproject.lan_database /bin/sh -c <span style="color:#e6db74">&#39;mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE &#39;</span> &amp;
+</code></pre></div><ul>
+<li>Example: transfer 2 single  tables in background ( use <code>wait</code> before next step) like this ( here we transfer <code>wp_post[s|postmeta]</code> ) :</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker exec  myrealroject.lan_database  /bin/sh -c <span style="color:#e6db74">&#39;mysqldump -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE wp_postmeta&#39;</span> |docker exec -i mytestproject.lan_database /bin/sh -c <span style="color:#e6db74">&#39;mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE &#39;</span> &amp;
+
+docker exec  myrealproject.lan_database  /bin/sh -c <span style="color:#e6db74">&#39;mysqldump -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE wp_posts&#39;</span> |docker exec -i mytestproject.lan_database /bin/sh -c <span style="color:#e6db74">&#39;mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE &#39;</span> &amp;
+
+
+</code></pre></div><hr>
+<ul>
+<li>! be sure to have no load  (night time , test environment)</li>
+<li>use a separate mysql console to run  <code>OPTIMIZE TABLE wp_posts;OPTIMIZE TABLE wp_postmeta;</code> SQL command like this:</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker exec -it mytestproject.lan_database /bin/sh -c <span style="color:#e6db74">&#39;mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE -e &#34;OPTIMIZE TABLE wp_posts;OPTIMIZE TABLE wp_postmeta;&#34;&#39;</span>
+</code></pre></div><hr>
+<h2 id="post-types">post-types</h2>
+<p>assuming you have all the values of the <code>post_type</code> of <code>wp_posts</code> one by line in a file under /tmp</p>
+<p>you can easily find the ones messing up your database using the following command:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat /tmp/posttypes |<span style="color:#66d9ef">while</span> read type ;<span style="color:#66d9ef">do</span> echo <span style="color:#e6db74">&#34;SELECT COUNT(*) FROM wp_posts  WHERE post_type=&#39;&#34;</span>$type<span style="color:#e6db74">&#34;&#39;;&#34;</span>|docker exec -i mytestproject.lan_database /bin/sh -c <span style="color:#e6db74">&#39;mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE&#39;</span>|grep -v COUNT |tr -d <span style="color:#e6db74">&#39;\n&#39;</span>; echo   <span style="color:#e6db74">&#34; &#34;</span>$type<span style="color:#e6db74">&#34; &#34;</span>  ;<span style="color:#66d9ef">done</span> |sort -n
+</code></pre></div><hr>
+<h2 id="clean-up-posts-with-no-users">clean up posts with no users</h2>
+<p>once ..</p>
+<ul>
+<li>you put all the <code>post_autor</code> ID&rsquo;s in <code>/tmp/post_auth</code></li>
+<li>and the current numeric users list in <code>/tmp/post_users</code></li>
+</ul>
+<p>the following will help to delete all posts that have no current user:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat /tmp/post_auth |grep -v <span style="color:#e6db74">&#39;^..$&#39;</span> |grep -v ^.$ | <span style="color:#66d9ef">while</span> read auth;<span style="color:#66d9ef">do</span> grep ^$auth$ /tmp/post_users <span style="color:#f92672">||</span> <span style="color:#f92672">{</span> echo <span style="color:#66d9ef">$(</span>date -u <span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34; deleteing posts for uid&#34;</span> $auth ;echo <span style="color:#e6db74">&#34;select ID from wp_posts where post_author=&#39;&#34;</span>$auth<span style="color:#e6db74">&#34;&#39;&#34;</span> |docker exec -i mytestproject.lan_database /bin/sh -c <span style="color:#e6db74">&#39;mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE &#39;</span> |grep -v ^ID$|<span style="color:#66d9ef">while</span> read delpost;<span style="color:#66d9ef">do</span> echo delpost:$delpost &gt;&amp;<span style="color:#ae81ff">2</span> ;echo <span style="color:#e6db74">&#34;DELETE FROM wp_postmeta where post_id=&#39;&#34;</span>$delpost<span style="color:#e6db74">&#34;&#39; ; DELETE FROM wp_posts WHERE ID=&#39;&#34;</span>$delpost<span style="color:#e6db74">&#34;&#39;;&#34;</span> &amp; <span style="color:#66d9ef">done</span> |docker exec -i mytestproject.lan_database /bin/sh -c <span style="color:#e6db74">&#39;mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE &#39;</span>  ;  <span style="color:#f92672">}</span> ; <span style="color:#66d9ef">done</span>  &amp; 
+</code></pre></div><hr>
+<h2 id="cleaning-empty-posts-due-to-misuse-of-gravity-forms-andor-advanced-custom-fields">Cleaning empty posts due to misuse of gravity forms and/or advanced custom fields</h2>
+<p>since it migh happen that everything becomes a post , your wp_posts table gets filled quickly,
+once it reaches some million entry it will be slow as hell , clean it out with the following command ( and maybe modify it , e.g. post_status=&lsquo;draft&rsquo; and the dates in the BETWEEN section ) :</p>
+<pre><code>echo &quot;SELECT ID FROM wp_posts WHERE post_status='draft' AND post_name='' AND post_title='' AND post_content='' AND post_name='' AND post_mime_type='' AND post_type='post' AND post_modified BETWEEN '2017-01-01 00:00:00' AND '2020-11-11 23:59:59'  ;&quot;|docker exec -i mytestproject.lan_database /bin/sh -c 'mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE ' |while read delpost;do echo -ne &quot;\r &quot;delpost:$delpost .. &gt;&amp;2 ;echo &quot;DELETE FROM wp_postmeta where post_id='&quot;$delpost&quot;' ; DELETE FROM wp_posts WHERE ID='&quot;$delpost&quot;';&quot;  &amp; sleep 0.005 ; done |docker exec -i mytestproject.lan_database /bin/sh -c 'mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE ' 
+</code></pre><p>to speed that up you might start the same process and add a a reverse sort and e.g. take only entries starting with 1 , so it will delete 11.xxx.xxx and 1.xxx.xxx and 1xxx.xxx and so on :</p>
+<pre><code>echo &quot;SELECT ID FROM wp_posts WHERE post_status='draft' AND post_name='' AND post_title='' AND post_content='' AND post_name='' AND post_mime_type='' AND post_type='post' AND post_modified BETWEEN '2017-01-01 00:00:00' AND '2020-11-11 23:59:59'  ;&quot;|docker exec -i mytestproject.lan_database  /bin/sh -c 'mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE ' |sort -n -r |grep ^1 |while read delpost;do echo -ne &quot;\r &quot;delpost:$delpost .. &gt;&amp;2 ;echo &quot;DELETE FROM wp_postmeta where post_id='&quot;$delpost&quot;' ; DELETE FROM wp_posts WHERE ID='&quot;$delpost&quot;';&quot;  &amp; sleep 0.002 ; done |docker exec -i mytestproject.lan_database  /bin/sh -c 'mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE '
+</code></pre><p>Screenshot of where one might end up when doing parallel deletion:</p>
+<p><img src="imgs/wpdbcleanmutli.png" alt="Multiple parrallel executions of the deletion script"></p>
+<hr>
+<h2 id="cleaning-gravity-forms">Cleaning Gravity Forms</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo <span style="color:#e6db74">&#34;SELECT id FROM wp_gf_entry WHERE date_created BETWEEN &#39;2017-01-01 00:00:00&#39; AND &#39;2020-12-01 23:59:59&#39;  ;&#34;</span>|docker exec -i mytestproject.lan_database /bin/sh -c <span style="color:#e6db74">&#39;mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE &#39;</span>|<span style="color:#66d9ef">while</span> read delgf ; <span style="color:#66d9ef">do</span> echo -ne <span style="color:#e6db74">&#34;\r &#34;</span>delpost:$delgf .. &gt;&amp;<span style="color:#ae81ff">2</span> ;echo <span style="color:#e6db74">&#34;DELETE FROM wp_gf_entry WHERE id=&#39;&#34;</span>$delgf<span style="color:#e6db74">&#34;&#39; ; DELETE FROM wp_gf_entry_meta WHERE entry_id=&#39;&#34;</span>$delgf<span style="color:#e6db74">&#34;&#39; ;  DELETE FROM wp_gf_entry_notes WHERE entry_id=&#39;&#34;</span>$delgf<span style="color:#e6db74">&#34;&#39; ;&#34;</span>  &amp; sleep 0.01 ; <span style="color:#66d9ef">done</span>  |docker exec -i mytestproject.lan_database /bin/sh -c <span style="color:#e6db74">&#39;mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE &#39;</span>
+</code></pre></div><hr>
+<h2 id="cleaning-uploads">Cleaning Uploads</h2>
+<p>first get the post ids of orphaned uploads/images:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"> echo <span style="color:#e6db74">&#34;SELECT ID FROM wp_posts WHERE post_type = &#39;attachment&#39; AND guid LIKE &#39;%http://heldenderjugend.com/wp-content/uploads/2019/%&#39; &#34;</span> |docker exec -i mytestproject.lan_database /bin/sh -c <span style="color:#e6db74">&#39;mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE &#39;</span> &gt;&gt; /tmp/imgid
+</code></pre></div><p>then delete them</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cat /tmp/imgid |<span style="color:#66d9ef">while</span> read delpost;<span style="color:#66d9ef">do</span> echo -ne <span style="color:#e6db74">&#34;\r &#34;</span>delpost:$delpost .. &gt;&amp;<span style="color:#ae81ff">2</span> ;echo <span style="color:#e6db74">&#34;DELETE FROM wp_postmeta where post_id=&#39;&#34;</span>$delpost<span style="color:#e6db74">&#34;&#39; ; DELETE FROM wp_posts WHERE ID=&#39;&#34;</span>$delpost<span style="color:#e6db74">&#34;&#39;;&#34;</span> ;<span style="color:#66d9ef">done</span> |docker exec -i mytestproject.lan_database /bin/sh -c <span style="color:#e6db74">&#39;mysql -u root -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE &#39;</span>    
+</code></pre></div>]]></content>
+        </item>
+        
+        <item>
+            <title>migrating and bypassing auth  on cakePHP1.3 aka create admin user and password reset</title>
+            <link>https://benchonaut.gitlab.io/lightning-rod/posts/2020/10/migrating-and-bypassing-auth-on-cakephp1.3-aka-create-admin-user-and-password-reset/</link>
+            <pubDate>Wed, 28 Oct 2020 05:47:54 +0000</pubDate>
+            
+            <guid>https://benchonaut.gitlab.io/lightning-rod/posts/2020/10/migrating-and-bypassing-auth-on-cakephp1.3-aka-create-admin-user-and-password-reset/</guid>
+            <description>a Paingaining CakePHP 1.3 migration: some strange people refuse to upgrade their stuff to at least acceptable compatibility levels... ...one day their hoster displays &amp;quot;we will turn off version X.Y next month&amp;quot; in his backend do not answer the phone , you will see where this ends up :  firstly pulling some php5.6 environment out of the grave a quick review of the normally unused top root /index.php revealed a nicely hacked page with a 3 line snippet i securing everything with .</description>
+            <content type="html"><![CDATA[<h2 id="a-paingaining-cakephp-13-migration">a Paingaining CakePHP 1.3 migration:</h2>
+<h3 id="some-strange-people-refuse-to-upgrade-their-stuff-to-at-least-acceptable-compatibility-levels"><code>some strange people refuse to upgrade their stuff to at least acceptable compatibility levels...</code></h3>
+<h3 id="one-day-their-hoster-displays-we-will-turn-off-version-xy-next-month-in-his-backend"><code>...one day their hoster displays &quot;we will turn off version X.Y next month&quot; in his backend</code></h3>
+<h3 id="do-not-answer-the-phone--you-will-see-where-this-ends-up-">do not answer the phone , you will see where this ends up :</h3>
+<ul>
+<li>firstly pulling some php5.6 environment out of the grave</li>
+<li>a quick review of the normally unused top root  /index.php revealed a nicely hacked page with a 3 line snippet i</li>
+<li>securing everything with <strong>.htaccess</strong> since it will become ugly and you will need this <strong>last line of defense</strong></li>
+<li>importing SQL and files was the easy part</li>
+<li>session storage was necessary , so even when when <a href="https://kendsnyder.com/database-sessions-with-cakephp-1-3-in-1-minute/">database settings</a> would eventually work ( they need all <code>Configure::write('Session.</code> variables to be set ) , <strong>the <a href="https://stackoverflow.com/questions/15533207/cakephp-tmp-directory-cache-and-session-folders">proper writable structure</a> was necessary under the newly created tmp dir</strong> ( docker-compose example, persistent log folders were used , so the last line is only if you are sure you RAM won&rsquo;t be bloated):</li>
+</ul>
+<pre><code>    tmpfs:
+      - /var/www/tmp/:exec,mode=777
+      - /var/www/.phpsessions:noexec,mode=777
+      - /var/www/tmp/models:exec,mode=777
+      - /var/www/tmp/persistent:exec,mode=777
+    #  - /var/www/tmp/logs:noexec,mode=777
+</code></pre><ul>
+<li>to make database sessions work at all , the <a href="https://kendsnyder.com/database-sessions-with-cakephp-1-3-in-1-minute/">app has to have a table with the following structure</a>:</li>
+</ul>
+<pre><code>CREATE TABLE `cake_sessions` (
+`id` varchar(255) NOT NULL DEFAULT '',
+`data` mediumtext,
+`expires` int(11) DEFAULT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</code></pre><ul>
+<li>somehow the migration messed it app and a new controller for the thingy it self was needed , setting the name also changed the table names to e.g. <strong>name+</strong> <strong><code>s</code></strong> insted of <strong>users</strong></li>
+</ul>
+<pre><code>&lt;?php
+class AppnameController extends AppController {
+
+	var $name = 'user';
+}
+?&gt;
+</code></pre><ul>
+<li>
+<p>a user was needed ..  so <strong>user</strong> and <strong>user_rights</strong> entries were copied from another existing admin since the login controller only logs in , but no page would be visible</p>
+</li>
+<li>
+<ul>
+<li><a href="">stackoverflow SQL trick using salt </a>  ( <code>UPDATE user SET password = CONCAT( SHA1(nacl), SHA1(&quot;test123&quot;)) WHERE id = 123</code> ) <strong>did not work out of the box</strong></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><a href="https://stackoverflow.com/questions/23566565/how-to-reset-the-admin-password-in-cakephp">stackoverflow App::uses extension tip</a>   <strong>did not work out of the box</strong></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><a href="https://stackoverflow.com/questions/19362835/reset-password-function-cakephp">stackvoverflow add password reset</a>   <strong>did not work out of the box</strong></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><a href="https://gist.github.com/AngelVillanuevaGists/4131977">gist <code>Security::hash</code> tip </a>   <strong>did not work out of the box</strong></li>
+</ul>
+</li>
+<li>
+<p>cakephp has a console , but this didn&rsquo;t help either :</p>
+</li>
+<li>
+<ul>
+<li>old versions : <code>cake/console/cake console</code></li>
+</ul>
+</li>
+<li>
+<ul>
+<li>newer versions <code>bin/cake console</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="all-didnt-help-">All didn&rsquo;t help ..</h2>
+<p>but since cake php is so &ldquo;easy&rdquo; , one could easily modify the login controller to be our friend , no matter what the password check says :D
+so changes were made to <code>./appname/controllers/users_controller.php</code>  in a way that the session and redirect part would be executed in both cases and that the search only looks for a entry having <code>ùsername</code></p>
+<pre><code>diff   ./appname/controllers/users_controller.php ./appname/controllers/users_controller.php.orig
+135c135,136
+&lt; 					'username' =&gt; $this-&gt;data['Login']['username']
+---
+&gt; 					'username' =&gt; $this-&gt;data['Login']['username'],
+&gt; 					'password' =&gt; $this-&gt;data['Login']['password']
+155,168d155
+&lt;  $this-&gt;Session-&gt;write( 'User', $tmp[0]);
+&lt;                                 $this-&gt;_flash('Ich mag dich trotzdem.', 'success_message');
+&lt;
+&lt;                                 $controller = $this-&gt;Session-&gt;read( 'Redirect.After.Login.Controller');
+&lt;                                 $this-&gt;Session-&gt;delete( 'Redirect.After.Login.Controller');
+&lt;
+&lt;                                 $action = $this-&gt;Session-&gt;read( 'Redirect.After.Login.Action');
+&lt;                                 $this-&gt;Session-&gt;delete( 'Redirect.After.Login.Action');
+&lt;                                 
+&lt;                                 $target = array('controller' =&gt;  &quot;orders&quot;, 'action' =&gt;  &quot;index&quot;);
+&lt;                                 if( !is_null( $controller)) $target['controller'] = $controller;
+&lt;                                 if( !is_null( $action)) $target['action'] = $action;
+&lt;                                 $this-&gt;redirect( $target);
+
+</code></pre><hr>
+<p>The final login function in the  controller looks like this</p>
+<pre><code>&lt;?php
+class UsersController extends AppController {
+</code></pre><p>&hellip;</p>
+<pre><code>	function login()
+	{
+		if( is_array( $this-&gt;data)
+			&amp;&amp; array_key_exists( 'Login', $this-&gt;data)
+			&amp;&amp; is_array( $this-&gt;data['Login'])
+			&amp;&amp; array_key_exists( 'username', $this-&gt;data['Login'])
+			&amp;&amp; array_key_exists( 'password', $this-&gt;data['Login']))
+		{
+			$tmp = $this-&gt;User-&gt;find('all', array(
+				'conditions' =&gt; array(
+					'username' =&gt; $this-&gt;data['Login']['username']
+				)
+			));
+
+			if( is_array( $tmp) &amp;&amp; sizeof( $tmp)==1)
+			{
+				$this-&gt;Session-&gt;write( 'User', $tmp[0]);
+				$this-&gt;_flash('Sie wurden erfolgreich angemeldet.', 'success_message');
+
+				$controller = $this-&gt;Session-&gt;read( 'Redirect.After.Login.Controller');
+				$this-&gt;Session-&gt;delete( 'Redirect.After.Login.Controller');
+
+				$action = $this-&gt;Session-&gt;read( 'Redirect.After.Login.Action');
+				$this-&gt;Session-&gt;delete( 'Redirect.After.Login.Action');
+
+                                $target = array('controller' =&gt;  &quot;orders&quot;, 'action' =&gt;  &quot;index&quot;);
+                                if( !is_null( $controller)) $target['controller'] = $controller;
+                                if( !is_null( $action)) $target['action'] = $action;
+				$this-&gt;redirect( $target);
+			}else
+ $this-&gt;Session-&gt;write( 'User', $tmp[0]);
+                                $this-&gt;_flash('Ich mag dich trotzdem..', 'success_message');
+
+                                $controller = $this-&gt;Session-&gt;read( 'Redirect.After.Login.Controller');
+                                $this-&gt;Session-&gt;delete( 'Redirect.After.Login.Controller');
+
+                                $action = $this-&gt;Session-&gt;read( 'Redirect.After.Login.Action');
+                                $this-&gt;Session-&gt;delete( 'Redirect.After.Login.Action');
+
+                                $target = array('controller' =&gt;  &quot;orders&quot;, 'action' =&gt;  &quot;index&quot;);
+                                if( !is_null( $controller)) $target['controller'] = $controller;
+                                if( !is_null( $action)) $target['action'] = $action;
+                                $this-&gt;redirect( $target);
+
+				$this-&gt;_flash('Die eingegebenen Zugansdaten sind falsch!...macht aber nix', 'error_message');
+		}
+		$this-&gt;render('login', 'default_non_menu');
+	}
+</code></pre><hr>
+<ul>
+<li>after the now bypassed login , the &ldquo;change password&rdquo; in the admin&gt;user area helped..</li>
+</ul>
+<hr>
+<h2 id="do-not-do-it-without-htaccess--never-">DO NOT DO IT WITHOUT <code>.htaccess</code> !!! NEVER !</h2>
+]]></content>
+        </item>
+        
+        <item>
+            <title>Hugo SSG/CMS and the initial static hussle</title>
+            <link>https://benchonaut.gitlab.io/lightning-rod/posts/2020/10/hugo-ssg/cms-and-the-initial-static-hussle/</link>
+            <pubDate>Sat, 24 Oct 2020 15:19:10 +0000</pubDate>
+            
+            <guid>https://benchonaut.gitlab.io/lightning-rod/posts/2020/10/hugo-ssg/cms-and-the-initial-static-hussle/</guid>
+            <description>OkayOkay , so bootstrapping this whole thingy was definitely something for the lightning rod ,
+d*mn , i created a hugo page already , but this time the level leveled up somehow.
+ Timeline Theme woes Firstly the timeline theme was really picky, since it needed the respective entries in a folder called timeline , but hokus also wants a subfolder , so all posts are created in content/timeline under a subfolder for each post.</description>
+            <content type="html"><![CDATA[<p>OkayOkay , so bootstrapping this whole thingy was definitely something for the lightning rod ,</p>
+<p>d*mn , i created a hugo page already , but this time the level leveled up somehow.</p>
+<hr>
+<h2 id="timeline-theme-woes">Timeline Theme woes</h2>
+<p>Firstly the <strong>timeline</strong> theme was really picky, since it needed the respective entries in a folder called <code>timeline</code> , but hokus also wants  a subfolder , so all posts are created in <code>content/timeline</code> under a subfolder for each post.</p>
+<p>Also the theme NEEDS <code>hugo-extended</code>.</p>
+<hr>
+<p>Once i realized the theme also rendered a post list under <code>posts</code> when a <code>content/posts/</code> folder exists ,
+the next step was to <strong>soft-link</strong> <code>content/timeline</code> to <code>content/posts</code> .</p>
+<p>Since index.md in layouts is still not really parsed , and shortcodes work in html , <strong>BUT NOT <code>index.html</code></strong>  , two files (<code>index.html</code> and <code>index.de.html</code> ) were put into the <code>layouts</code> folder &hellip;</p>
+<hr>
+<p>To make it cute , the files</p>
+<pre><code>layouts/partials/footer.html
+layouts/partials/logo.html
+</code></pre><p>were added , to have a logo next to the heading in the menu and a visitor counter in the footer.</p>
+<h2 id="generic-modifications">Generic modifications</h2>
+<p>To support raw html insertion , a file named <code>layouts/shortcodes/rawhtml.html</code> containing:</p>
+<pre><code>&lt;!-- raw html --&gt;
+{{.Inner}}
+</code></pre><p>had to be created.</p>
+<hr>
+<p>Since the hosting takes place in a subfolder,</p>
+<pre><code>canonifyurls = true
+relativeURLs = true
+</code></pre><p>had to be set in the config.</p>
+<p>Hugo also had no motivation to form correct menu-entries when the links were simple strings , a dot in front helped :</p>
+<pre><code>[[menu.main]]
+  identifier = &quot;posts&quot;
+  name       = &quot;Posts&quot;
+  url        = &quot;./posts&quot;
+  weight     = 1
+
+</code></pre><hr>
+<h2 id="awesomeness--auto-preview-without-hugo-serve">Awesomeness ( auto preview without <code>hugo serve</code>)</h2>
+<p>since the destination is a subfolder and things become ugly with <code>hugo serve</code>
+the <code>inotify-tools</code> package(debian) offered a nice auto-generating loop after some fiddling:</p>
+<pre><code> while (true);do inotifywait -e modify,create,delete,move -r $(pwd) &amp;&amp; /tmp/hugo ; sleep 1 ;done &amp;
+</code></pre>]]></content>
+        </item>
+        
+        <item>
+            <title>Hello and Welcome</title>
+            <link>https://benchonaut.gitlab.io/lightning-rod/posts/2020/10/hello-and-welcome/</link>
+            <pubDate>Fri, 23 Oct 2020 05:17:03 +0000</pubDate>
+            
+            <guid>https://benchonaut.gitlab.io/lightning-rod/posts/2020/10/hello-and-welcome/</guid>
+            <description>This is just a placeholder post , so the timeline items fon&amp;rsquo;t feel alone.</description>
+            <content type="html"><![CDATA[<p>This is just a placeholder post , so the timeline items fon&rsquo;t feel alone.</p>
+]]></content>
+        </item>
+        
+    </channel>
+</rss>
